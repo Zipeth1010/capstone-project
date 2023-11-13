@@ -3,10 +3,9 @@ const { IamAuthenticator } = require("ibm-cloud-sdk-core");
 
 function main(params) {
   const secret = {
-    COUCH_URL:
-      "https://c70b7079-0862-4d2f-b8c6-e3750069f0eb-bluemix.cloudantnosqldb.appdomain.cloud",
-    COUCH_USERNAME: "c70b7079-0862-4d2f-b8c6-e3750069f0eb-bluemix",
-    IAM_API_KEY: "2oZBQ19trfU-56FTfwRiBt4KfW1drofTWQ8rpkKNCPrI",
+    COUCH_URL: "",
+    COUCH_USERNAME: "",
+    IAM_API_KEY: "",
   };
   return new Promise(function (resolve, reject) {
     const authenticator = new IamAuthenticator({

@@ -1,5 +1,6 @@
 from ibmcloudant.cloudant_v1 import CloudantV1,  IndexDefinition, IndexField, Document
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+
 import sys
 
 def main(dict):
@@ -12,33 +13,35 @@ def main(dict):
 
 def get_reviews(dict):
     secret = {
-        "COUCH_URL":"https://c70b7079-0862-4d2f-b8c6-e3750069f0eb-bluemix.cloudantnosqldb.appdomain.cloud",
-        "IAM_API_KEY":"2oZBQ19trfU-56FTfwRiBt4KfW1drofTWQ8rpkKNCPrI",
-        "COUCH_USERNAME" : "c70b7079-0862-4d2f-b8c6-e3750069f0eb-bluemix"
+        "COUCH_URL":"",
+        "IAM_API_KEY":"",
+        "COUCH_USERNAME" : ""
     }
     authenticator = IAMAuthenticator(secret["IAM_API_KEY"])
     service = CloudantV1(authenticator=authenticator)
     service.set_service_url(secret['COUCH_URL'])
     try:
-        index_field = IndexField(id="desc")
+        index_field = IndexField(review_id="desc")
         index = IndexDefinition(fields=[index_field])
         response1 = service.post_index(db='reviews',ddoc='json-index',name='getDealerbyId',index=index,type='json').get_result()
         response = service.post_find(db='reviews', 
         selector = {'dealership' : {'$eq' : int(dict['params']['dealerId'])}},
-        fields = ["id", "name", "dealership", "review", "purchase", "purchase_date",
+        fields = ["review_id", "name", "dealership", "review", "purchase", "purchase_date",
         "car_make", "car_model", "car_year"],
-        sort = [{"id" : 'desc'}]).get_result()
-        return { "result" : response['docs']}
+        sort = [{"review_id" : 'desc'}]).get_result()
+        if len(response['docs']) == 0:
+            return {"statusCode" : 404, "message":"Dealership ID doesn't exist"}
+        else:
+            return { "result" : response['docs']}
         
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return None
+    except:
+        return { "statusCode": 500, "message": "Could not post review due to server error" }
 
 def post_review(dict):
     secret = {
-        "COUCH_URL":"https://c70b7079-0862-4d2f-b8c6-e3750069f0eb-bluemix.cloudantnosqldb.appdomain.cloud",
-        "IAM_API_KEY":"2oZBQ19trfU-56FTfwRiBt4KfW1drofTWQ8rpkKNCPrI",
-        "COUCH_USERNAME" : "c70b7079-0862-4d2f-b8c6-e3750069f0eb-bluemix"
+        "COUCH_URL":"",
+        "IAM_API_KEY":"",
+        "COUCH_USERNAME" : ""
     }
     authenticator = IAMAuthenticator(secret["IAM_API_KEY"])
     service = CloudantV1(authenticator=authenticator)
@@ -54,6 +57,5 @@ def post_review(dict):
         response2 = service.post_document(db='reviews', document=review_doc).get_result()
         return {"review": response2}
         
-    except Exception as e:
-        print(f"An error occured: {e}")
-        return None
+    except:
+        return { "statusCode": 500, "message": "Could not post review due to server error" }
