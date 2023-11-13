@@ -1,7 +1,7 @@
 {
   "reviews": [
     {
-      "id": 1,
+      "review_id": 1,
       "name": "Berkly Shepley",
       "dealership": 15,
       "review": "Total grid-enabled service-desk",
@@ -12,7 +12,7 @@
       "car_year": 2010
     },
     {
-      "id": 2,
+      "review_id": 2,
       "name": "Gwenora Zettoi",
       "dealership": 23,
       "review": "Future-proofed foreground capability",
@@ -23,7 +23,7 @@
       "car_year": 1995
     },
     {
-      "id": 3,
+      "review_id": 3,
       "name": "Lion Reames",
       "dealership": 29,
       "review": "Expanded global groupware",
@@ -34,14 +34,14 @@
       "car_year": 2003
     },
     {
-      "id": 4,
+      "review_id": 4,
       "name": "Iorgos Colley",
       "dealership": 13,
       "review": "Optional heuristic software",
       "purchase": false
     },
     {
-      "id": 5,
+      "review_id": 5,
       "name": "Kissee Noirel",
       "dealership": 46,
       "review": "Diverse client-server success",
