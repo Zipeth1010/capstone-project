@@ -27,7 +27,7 @@ DEBUG = True
 
 APPEND_SLASH = True
 
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = ["localhost", '127.0.0.1', "c70b7079-0862-4d2f-b8c6-e3750069f0eb-bluemix.cloudantnosqldb.appdomain.cloud"]
 
 
 # Application definition
@@ -79,8 +79,12 @@ WSGI_APPLICATION = 'djangobackend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'railway',
+        "USER": 'postgres',
+        "PASSWORD": '6ad5gFbgA5G1CGBBB3gGA*aEg*F66aaa',
+        'HOST': 'viaduct.proxy.rlwy.net',
+        'PORT': '45789',
     }
 }
 
