@@ -3,8 +3,9 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
+from .models import CarModel
 # from .restapis import related methods
-from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -99,7 +100,7 @@ def get_dealer_details(request, dealer_id):
         url = "https://eu-gb.functions.appdomain.cloud/api/v1/web/381222d1-3fc7-4759-9f8f-3a6a72715c3b/api/review"
         try:
             reviews = get_dealer_reviews_from_cf(url, dealerId=dealer_id)
-            dealer_reviews = ' '.join([review.review for review in reviews])
+            dealer_reviews = ' '.join([review.sentiment for review in reviews])
             return HttpResponse(dealer_reviews)
         except Exception as e:
             context["message"] = f"Failure loading reviews: {str(e)}"
@@ -109,5 +110,31 @@ def get_dealer_details(request, dealer_id):
 
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):
-# ...
+def add_review(request, dealer_id):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            review_to_post = {}
+            form = request.POST
+            review_to_post["name"] = f"{request.user_first_name} {request.user_last_name}"
+            review_to_post['dealership'] = dealer_id
+            review_to_post['review'] = form['content']
+            review_to_post['purchase'] = form.get("purchasecheck")
+            if review_to_post['purchase']:
+                review_to_post['purchase_date'] = datetime.strptime(form.get("purchasedate"), "%m/%d/%Y").isoformat()
+            if not review_to_post['purchase']:
+                review_to_post['purchase_date'] = None
+            car = CarModel.objects.get(pk=form['car'])
+            review_to_post['car_make'] = car.car_make
+            review_to_post['car_model'] = car.name
+            review_to_post['car_year'] = car.year
 
+            url = "https://eu-gb.functions.appdomain.cloud/api/v1/web/381222d1-3fc7-4759-9f8f-3a6a72715c3b/api/review"
+            json_payload = {"review" : review_to_post, "method":"post"}
+
+            result = post_request(url=url, json_payload=json_payload)
+            if int(result.status_code) == 200:
+                print("Review posted Successfully")
+            return HttpResponse(result)
+    else:
+        print("User not authenticated, please log in")
+        return redirect("/djangoapp/login")
