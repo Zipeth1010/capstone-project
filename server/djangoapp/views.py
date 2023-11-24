@@ -82,9 +82,8 @@ def get_dealerships(request):
     if request.method == 'GET':
         url = "https://eu-gb.functions.appdomain.cloud/api/v1/web/381222d1-3fc7-4759-9f8f-3a6a72715c3b/api/dealerships"
         try:
-            dealerships = get_dealers_from_cf(url)
-            dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
-            return HttpResponse(dealer_names)
+            context['dealerships'] = get_dealers_from_cf(url)
+            return render(request, 'djangoapp/index.html', context)
         except Exception as e:
             context["message"] = f"Failure loading dealerships: {str(e)}"
             return render(request, 'djangoapp/index.html', context)
@@ -99,12 +98,12 @@ def get_dealer_details(request, dealer_id):
     if request.method == "GET":
         url = "https://eu-gb.functions.appdomain.cloud/api/v1/web/381222d1-3fc7-4759-9f8f-3a6a72715c3b/api/review"
         try:
-            reviews = get_dealer_reviews_from_cf(url, dealerId=dealer_id)
-            dealer_reviews = ' '.join([review.sentiment for review in reviews])
-            return HttpResponse(dealer_reviews)
+            context['reviews'] = get_dealer_reviews_from_cf(url, dealerId=dealer_id)
+            context['dealer_id'] = dealer_id
+            return render(request, 'djangoapp/dealer_details.html', context)
         except Exception as e:
             context["message"] = f"Failure loading reviews: {str(e)}"
-            return render(request, 'djangoapp/index.html', context)
+            return render(request, 'djangoapp/dealer_details.html', context)
 
 
 
@@ -112,10 +111,16 @@ def get_dealer_details(request, dealer_id):
 # def add_review(request, dealer_id):
 def add_review(request, dealer_id):
     if request.user.is_authenticated:
+        if request.method == "GET":
+            context = {}
+            context['cars'] = CarModel.objects.all()
+            context['dealer_id'] = dealer_id
+            return render(request, 'djangoapp/add_review.html', context) 
+
         if request.method == "POST":
             review_to_post = {}
             form = request.POST
-            review_to_post["name"] = f"{request.user_first_name} {request.user_last_name}"
+            review_to_post["name"] = f"{request.user.first_name} {request.user.last_name}"
             review_to_post['dealership'] = dealer_id
             review_to_post['review'] = form['content']
             review_to_post['purchase'] = form.get("purchasecheck")
@@ -127,14 +132,15 @@ def add_review(request, dealer_id):
             review_to_post['car_make'] = car.car_make
             review_to_post['car_model'] = car.name
             review_to_post['car_year'] = car.year
+            print(review_to_post)
 
             url = "https://eu-gb.functions.appdomain.cloud/api/v1/web/381222d1-3fc7-4759-9f8f-3a6a72715c3b/api/review"
-            json_payload = {"review" : review_to_post, "method":"post"}
+            json_payload = {"params" :{ "review" : review_to_post, "method":"post"}}
 
             result = post_request(url=url, json_payload=json_payload)
             if int(result.status_code) == 200:
                 print("Review posted Successfully")
-            return HttpResponse(result)
+            return redirect('djangoapp:dealer_details', dealer_id=dealer_id)
     else:
-        print("User not authenticated, please log in")
+        print("User not authenticated, please log")
         return redirect("/djangoapp/login")
