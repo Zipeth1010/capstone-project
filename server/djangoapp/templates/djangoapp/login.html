@@ -1,0 +1,33 @@
+{% extends 'base.html' %} {% block content %}
+<h1 class="title">Log in Page</h1>
+<form action="{% url 'djangoapp:login' %}" method="post">
+  {% csrf_token %}
+  <h3>Log in here</h3>
+  <div class="form-group">
+    <label for="username"><b>Enter Username:</b></label>
+    <input
+      id="username"
+      class="form-control"
+      type="text"
+      name="username"
+      placeholder="Username"
+      required
+    />
+    <label for="password"><b>Enter Password</b></label>
+    <input
+      id="password"
+      class="form-control"
+      type="text"
+      name="password"
+      placeholder="Password"
+      required
+    />
+  </div>
+  {% if message %}
+  <div class="alert alert-warning">
+    <h5>{{message}}</h5>
+  </div>
+  {% endif %}
+  <button type="submit" class="btn btn-primary">Log in</button>
+</form>
+{% endblock %}

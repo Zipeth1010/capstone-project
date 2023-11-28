@@ -48,9 +48,11 @@ def get_request(url, api_key=False, **kwargs):
 def post_request(url, json_payload, **kwargs):
     print(f"POST to {url}")
     try:
+        print(json_payload)
         response = requests.post(url, params=kwargs, json=json_payload)
-    except:
+    except Exception as e:
         print("An error occurred while making POST request. ")
+        print(e)
     status_code = response.status_code
     print(f"With status {status_code}")
     

@@ -1,19 +1,25 @@
-{% extends 'base.html' %} {% block content %} {% if reviews %} {% if
-user.is_authenticated %}
-<div style="margin: 10px">
-  <a class="btn btn-primary" href="{% url 'djangoapp:add_review' dealer_id %}"
-    ><b>Write a car review</b></a
-  >
+{% extends 'base.html' %} {% block content %}
+<div>
+  <h1 class="title" style="display: inline-block; padding: 5px">
+    Reviews of the Dealership!
+  </h1>
+  {% if user.is_authenticated %}
+  <div style="display: inline-block; margin-left: 50%">
+    <a class="btn btn-primary" href="{% url 'djangoapp:add_review' dealer_id %}"
+      ><b>Write a Review</b></a
+    >
+  </div>
 </div>
-{% endif %}
+{% endif %} {% if reviews %}
 <div class="card-columns">
   {% for review in reviews %} {% if review.car_make %}
   <div class="card">
     <img
       class="card-img-left"
+      style="height: 50px; width: 50px; display: inline-block; padding: 5px"
       src="{{MEDIA_URL}}/emoji/{{review.sentiment}}.png"
     />
-    <div class="card-body">
+    <div class="card-body" style="text-align: center">
       <h3 class="card-title">{{review.car_make}}, {{ review.car_model }}</h3>
       <h4 class="card-title">{{ review.purchase_date }}</h4>
       <p class="card-text">{{ review.review }}</p>
@@ -23,14 +29,21 @@ user.is_authenticated %}
   <div class="card">
     <img
       class="card-img-left"
+      style="height: 50px; width: 50px; display: inline-block; padding: 5px"
       src="{{MEDIA_URL}}/emoji/{{review.sentiment}}.png"
     />
-    <div class="card-body">
+    <div class="card-body" style="text-align: center">
       <h3 class="card-title">Review</h3>
       <p class="card-text">{{ review.review }}</p>
     </div>
   </div>
-  {% endif %} {% endfor %}
+  {% endif %} {% endfor %} {% else %}
+  <h4 class="title">
+    <br />There are no reviews for this dealership. If you would like to leave a
+    review, be sure to click the write a review button at the top of the page
+    after logging in!
+  </h4>
+  {% endif %}
 </div>
 
 {% endblock %}

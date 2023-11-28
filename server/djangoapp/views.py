@@ -124,21 +124,25 @@ def add_review(request, dealer_id):
             review_to_post['dealership'] = dealer_id
             review_to_post['review'] = form['content']
             review_to_post['purchase'] = form.get("purchasecheck")
+            if review_to_post['purchase'] == 'on':
+                review_to_post['purchase'] == True
+            else:
+                review_to_post['purchase'] == False
             if review_to_post['purchase']:
-                review_to_post['purchase_date'] = datetime.strptime(form.get("purchasedate"), "%m/%d/%Y").isoformat()
+                purchase_date = datetime.strptime(form.get("purchasedate"), "%m/%d/%Y").isoformat()
+                review_to_post['purchase_date'] = purchase_date[5:7] + '/' +purchase_date[8:10] + '/' + purchase_date[0:4]
             if not review_to_post['purchase']:
                 review_to_post['purchase_date'] = None
             car = CarModel.objects.get(pk=form['car'])
-            review_to_post['car_make'] = car.car_make
+            review_to_post['car_make'] = car.car_make.name
             review_to_post['car_model'] = car.name
             review_to_post['car_year'] = car.year
-            print(review_to_post)
 
             url = "https://eu-gb.functions.appdomain.cloud/api/v1/web/381222d1-3fc7-4759-9f8f-3a6a72715c3b/api/review"
             json_payload = {"params" :{ "review" : review_to_post, "method":"post"}}
 
             result = post_request(url=url, json_payload=json_payload)
-            if int(result.status_code) == 200:
+            if int(result.status_code) == 201:
                 print("Review posted Successfully")
             return redirect('djangoapp:dealer_details', dealer_id=dealer_id)
     else:
