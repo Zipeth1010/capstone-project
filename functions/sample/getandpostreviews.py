@@ -13,9 +13,9 @@ def main(dict):
 
 def get_reviews(dict):
     secret = {
-        "COUCH_URL":"",
-        "IAM_API_KEY":"",
-        "COUCH_USERNAME" : ""
+        "COUCH_URL":"https://c70b7079-0862-4d2f-b8c6-e3750069f0eb-bluemix.cloudantnosqldb.appdomain.cloud",
+        "IAM_API_KEY":"2oZBQ19trfU-56FTfwRiBt4KfW1drofTWQ8rpkKNCPrI",
+        "COUCH_USERNAME" : "c70b7079-0862-4d2f-b8c6-e3750069f0eb-bluemix"
     }
     authenticator = IAMAuthenticator(secret["IAM_API_KEY"])
     service = CloudantV1(authenticator=authenticator)
@@ -30,18 +30,22 @@ def get_reviews(dict):
         "car_make", "car_model", "car_year"],
         sort = [{"review_id" : 'desc'}]).get_result()
         if len(response['docs']) == 0:
-            return {"statusCode" : 404, "message":"Dealership ID doesn't exist"}
+            return {"statusCode" : 404, "message":"Dealership ID doesn't exist, or no reviews for dealership!"}
         else:
-            return { "result" : response['docs']}
+            result = { "headers" : {'Content-Type': 'application/json'},
+            "statusCode": 200,
+            "body" : {"data":response['docs']},
+            }
+            return result
         
     except:
         return { "statusCode": 500, "message": "Could not post review due to server error" }
 
 def post_review(dict):
     secret = {
-        "COUCH_URL":"",
-        "IAM_API_KEY":"",
-        "COUCH_USERNAME" : ""
+        "COUCH_URL":"https://c70b7079-0862-4d2f-b8c6-e3750069f0eb-bluemix.cloudantnosqldb.appdomain.cloud",
+        "IAM_API_KEY":"2oZBQ19trfU-56FTfwRiBt4KfW1drofTWQ8rpkKNCPrI",
+        "COUCH_USERNAME" : "c70b7079-0862-4d2f-b8c6-e3750069f0eb-bluemix"
     }
     authenticator = IAMAuthenticator(secret["IAM_API_KEY"])
     service = CloudantV1(authenticator=authenticator)
@@ -51,11 +55,12 @@ def post_review(dict):
         length = len(response1['rows'])
         review = dict['params']['review']
         review_doc = Document(review_id=length, name = review["name"], dealership=review["dealership"], 
-        review=review['review'], purchase = review['purchase'], another=review['another'], 
+        review=review['review'], purchase = review['purchase'], 
         purchase_date=review['purchase_date'], car_make=review['car_make'], car_model=review['car_model'],
         car_year=review['car_year'])
-        response2 = service.post_document(db='reviews', document=review_doc).get_result()
-        return {"review": response2}
+        post_doc = service.post_document(db='reviews', document=review_doc).get_result()
+        result ={ "headers" : {'Content-Type': 'application/json'}, "statusCode": 201, "body" : { "message" : "Review created!"}} 
+        return result
         
     except:
         return { "statusCode": 500, "message": "Could not post review due to server error" }
