@@ -1,36 +1,24 @@
-# Final Project Template
-
-The final project for this course has several steps that you must complete. 
-To give you an overview of the whole project, all the high-level steps are listed below. 
-The project is then divided into several smaller labs that give the detailed instructions for each step. 
-You must complete all the labs to successfully complete the project.
+# Background
 
 ## Project Breakdown
 
-**Prework: Sign up for IBM Cloud account and create a Watson Natural language Understanding service**
-1. Create an IBM cloud account if you don't have one already.
-2. Create an instance of the Natural Language Understanding (NLU) service.
+This project was developed as the final module of the [IBM Full Stack Software Developer Professional Certificate](https://www.coursera.org/professional-certificates/ibm-full-stack-cloud-developer). I was given tasks to create templates, views, models, urls etc. to build the application up from a very basic initial layout and design. The project was peer-reviewed after submission and I don't plan on spending too much time improving the Front-End design as the biggest learning points from this project were learning Django application development and software developement using serverless and cloud computing.
 
-**Fork the project Github repository with a project then build and deploy the template project**
-1. Fork the repository in your account
-2. Clone the repository in the theia lab environment
-3. Create static pages to finish the user stories
-4. Deploy the application on IBM Cloud
+## Project Aim
+The aim of this project is to build a website for a fictional car dealership, to hold dealership, user, review, and car data. Users can sign in, select which dealership they would like information on and if they ended up using the dealership, they can leave a review if logged in so others know if the dealership was good or not. Reviews are automatically analysed using the IBM Watson NLU machine learning service to determine if they were good or not, and will be displayed according. Admins can also be added which have the autority to add different Car Makes (E.g. Audi, Skoda) and models (E.g. R9, Octavia) to a seperate postgreSQL database. These are then saved and are choosable to users when leaving a review about the specific car model they used when at the dealership.
 
-**Add user management to the application**
-1. Implement user management using the Django user authentication system.
-2. Set up continuous integration and delivery
+## Running Locally
+Firstly, one must clone the project. Open a new terminal and direct the directory towards the area you want it saved. 
+- Run 'git clone https://github.com/Zipeth1010/capstone-project.git'.
+- Run cd capstone-project/server
+- Install the required python packages 'pip install -r requirements.txt'
 
-**Implement backend services**
-1. Create cloud functions to manage dealers and reviews
-2. Create Django models and views to manage car model and car make
-3. Create Django proxy services and views to integrate dealers, reviews, and cars together
- 
-**Add dynamic pages with Django templates**
-1. Create a page that shows all the dealers
-2. Create a page that show reviews for a selected dealer
-3. Create a page that let's the end user add a review for a selected dealer
+To run the server, you must do the following:
+-In the server directory, run 'python3 manage.py makemigrations'
+-Then run 'python3 manage.py migrate'
+-Lastly, run 'python3 manage.py runserver'
 
-**Containerize your application**
-1. Add deployment artifacts to your application
-2. Deploy your application
+To create a superuser, which can add car makes:
+-Run the command 'python3 manage.py createsuperuser' while in the server directory
+-Follow the instructions and you may then use these details to log in on the app, or in the admin site. 
+
