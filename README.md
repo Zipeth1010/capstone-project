@@ -14,11 +14,11 @@ Firstly, one must clone the project. Open a new terminal and direct the director
 - Install the required python packages 'pip install -r requirements.txt'
 
 To run the server, you must do the following:
--In the server directory, run 'python3 manage.py makemigrations'
--Then run 'python3 manage.py migrate'
--Lastly, run 'python3 manage.py runserver'
+- In the server directory, run 'python3 manage.py makemigrations'
+- Then run 'python3 manage.py migrate'
+- Lastly, run 'python3 manage.py runserver'
 
 To create a superuser, which can add car makes:
--Run the command 'python3 manage.py createsuperuser' while in the server directory
--Follow the instructions and you may then use these details to log in on the app, or in the admin site. 
+- Run the command 'python3 manage.py createsuperuser' while in the server directory
+- Follow the instructions and you may then use these details to log in on the app, or in the admin site. 
 
