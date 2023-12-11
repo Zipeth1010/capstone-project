@@ -17,6 +17,7 @@ To run the server, you must do the following:
 - In the server directory, run 'python3 manage.py makemigrations'
 - Then run 'python3 manage.py migrate'
 - Lastly, run 'python3 manage.py runserver'
+- Once the app is running, open the running url and add '/djangoapp' at the end to display the application!
 
 To create a superuser, which can add car makes:
 - Run the command 'python3 manage.py createsuperuser' while in the server directory
