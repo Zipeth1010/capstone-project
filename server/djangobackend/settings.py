@@ -28,7 +28,7 @@ DEBUG = True
 
 APPEND_SLASH = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1','0.0.0.0', "c70b7079-0862-4d2f-b8c6-e3750069f0eb-bluemix.cloudantnosqldb.appdomain.cloud"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
